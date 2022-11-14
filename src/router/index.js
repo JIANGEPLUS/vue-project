@@ -1,14 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Login from '@/components/UserLogin.vue'
+import Home from '@/components/ShopHome.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'home',
-  //   component: HomeView
-  // },
+  {
+    path: '/',
+    redirect: '/login',
+  },
+  {
+    path:'/login',
+    component:Login
+  },
+  {
+    path:'/home',
+    component:Home
+  }
   // {
   //   path: '/about',
   //   name: 'about',
@@ -21,6 +30,22 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  // ...
+  // 返回 false 以取消导航
+  if(to.path==='/login')
+  {
+    return next()
+  }else{
+    const token=window.sessionStorage.getItem('token')
+    if(!token){
+      return next('/login')
+    }
+    next()
+  }
+  
 })
 
 export default router

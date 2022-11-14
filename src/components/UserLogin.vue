@@ -56,7 +56,9 @@ export default {
         this.$message({
         message: '恭喜你，登录成功',
         type: 'success'
-        }) 
+        })
+        sessionStorage.setItem('token',res.data.token)
+        this.$router.push('/home')
         }
           else{
           this.$message({
