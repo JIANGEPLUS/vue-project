@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/components/UserLogin.vue'
 import Home from '@/components/ShopHome.vue'
+import welcome from '@/components/Welcome.vue'
+import users from '@/components/User/User.vue'
 
 Vue.use(VueRouter)
 
@@ -16,7 +18,13 @@ const routes = [
   },
   {
     path:'/home',
-    component:Home
+    component:Home,
+    redirect: '/welcome',
+    // 带斜线的子路由会变成一级路由地址开始
+    children:[
+      { path: '/welcome', component: welcome },
+      { path: '/users', component: users }
+    ]
   }
   // {
   //   path: '/about',
