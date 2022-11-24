@@ -4,6 +4,8 @@ import Login from '@/components/UserLogin.vue'
 import Home from '@/components/ShopHome.vue'
 import welcome from '@/components/Welcome.vue'
 import users from '@/components/User/User.vue'
+import rights from '@/components/power/Rights.vue'
+import roles from '@/components/power/Roles.vue'
 
 Vue.use(VueRouter)
 
@@ -23,7 +25,10 @@ const routes = [
     // 带斜线的子路由会变成一级路由地址开始
     children:[
       { path: '/welcome', component: welcome },
-      { path: '/users', component: users }
+      { path: '/users', component: users },
+      {path:'/rights',component:rights},
+      {path:'/roles',component:roles}
+
     ]
   }
   // {

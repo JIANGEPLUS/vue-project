@@ -22,5 +22,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  /* 解决三级权限换行的问题 */
+  min-width:1366px
 }
 </style>

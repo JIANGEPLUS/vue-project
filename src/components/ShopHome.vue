@@ -76,7 +76,6 @@ export default {
     async getMenus(){
     const {data:res} =await this.$http.get('menus')
     this.MenuList = res.data
-    console.log(this.MenuList)
     },
     toggleCollection(){
       this.isCollapse=!this.isCollapse

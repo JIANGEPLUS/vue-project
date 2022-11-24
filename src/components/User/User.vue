@@ -61,7 +61,7 @@
               <el-button type="primary" icon="el-icon-edit" size="mini"  @click="editDialog(scope.row)"></el-button>
               <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(scope.row.id)"></el-button>
               <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="false">
-                <el-button type="warning" icon="el-icon-setting" size="mini" ></el-button>
+                <el-button type="warning" icon="el-icon-setting" size="mini" @click="distributeRoles(scope.row)"></el-button>
               </el-tooltip>
             </template> 
           </el-table-column>
@@ -122,6 +122,28 @@
           <el-button type="primary" @click="editUser">确 定</el-button>
         </div>
       </el-dialog>
+
+      <!-- 分配角色对话框 -->
+      <el-dialog title="分配角色" :visible.sync="setRoleDialogVisible" width="50%" @close="setRoleDialogClosed">
+          <div>
+          <p>当前的用户:{{userInfo.username}}</p>
+          <p>当前的角色:{{userInfo.role_name}}</p>
+          <p>分配新角色:
+              <!-- 角色选择下拉框
+              v-model：设置用户选中角色之后的id绑定数据
+              -->
+              <el-select v-model="selectedRoleId" placeholder="请选择角色">
+              <!-- :label 显示文本，:value 选中值 -->
+              <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id">
+              </el-option>
+              </el-select>
+          </p>
+          </div>
+          <span slot="footer" class="dialog-footer">
+          <el-button @click="setRoleDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveRoleInfo(userInfo.id)">确 定</el-button>
+          </span>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -132,6 +154,7 @@ import { Scope } from 'eslint-scope'
 export default {
   created () {
     this.getUserList()
+    this.getRolesList()
   },
   data() {
     var checkEmail = (rule, value, callback) => {
@@ -190,7 +213,11 @@ export default {
           id:'',
           mobile:'',
           email:''
-        }
+        },
+        setRoleDialogVisible:false,
+        userInfo:{},
+        selectedRoleId:'',
+        rolesList:{}
       }
     },
     methods: {
@@ -301,6 +328,34 @@ export default {
           }
           this.$message.success(res.meta.msg)
           this.getUserList()
+      },
+      distributeRoles(role){
+        this.userInfo=role
+        this.setRoleDialogVisible=true
+      },
+      // 发送分配角色的请求
+      async saveRoleInfo(id){
+        const {data:res}=await this.$http.put(`users/${id}/role`,{rid:this.selectedRoleId})
+        if(res.meta.status!=200)
+          {
+            return this.$message.error(res.meta.msg)
+          }
+          this.$message.success(res.meta.msg)
+          this.getUserList()
+          this.setRoleDialogVisible=false
+      },
+      async getRolesList(){
+        const {data:res}=await this.$http.get('roles')
+        if(res.meta.status!=200)
+          {
+            return this.$message.error(res.meta.msg)
+          }
+        this.rolesList=res.data
+      },
+      setRoleDialogClosed(){
+      //当关闭对话框的时候，重置下拉框中的内容
+      this.selectedRoleId = ''
+      this.userInfo = {} 
       }
     }
 }
